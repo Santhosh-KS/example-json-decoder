@@ -1,0 +1,70 @@
+{
+  "id" : 123456,
+  "uri" : "/item/123456",
+  "version" : 5,
+  "parent" : {
+    "id" : 13689741,
+    "uri" : "/item/13689741",
+    "name" : "Image stability"
+  },
+  "tracker" : {
+    "id" : 787956,
+    "project" : {
+      "id" : 265,
+      "uri" : "/project/007",
+      "name" : "Operation_JackSparrow"
+    },
+    "uri" : "/tracker/787956",
+    "name" : "FR_Operation_JackSparrow"
+  },
+  "testSet" : {
+    "id" : 98734,
+    "uri" : "/item/098734",
+    "name" : "Yaw Rate control"
+  },
+  "name" : "Run of Yaw Rate control stability",
+  "status" : {
+    "id" : 4,
+    "name" : "Finished",
+    "description" : "Test Run completed.",
+    "flags" : 17
+  },
+  "result" : {
+    "id" : 2,
+    "name" : "Failed"
+  },
+  "closedAt" : "2022-11-02T13:04:09Z",
+  "versions" : [ {
+    "id" : 13677616,
+    "uri" : "/item/13677616",
+    "name" : "SPARROW_22W13"
+  } ],
+  "testConfiguration" : {
+    "id" : 234244,
+    "uri" : "/item/234244",
+    "name" : "SIL_SPARROW_22W13"
+  },
+  "submitter" : {
+    "id" : 7733,
+    "uri" : "/user/7733",
+    "name" : "FirstName.LastName"
+  },
+  "modifier" : {
+    "id" : 7733,
+    "uri" : "/user/7733",
+    "name" : "FirstName.LastName"
+  },
+  "spentMillis" : 188000,
+  "submittedAt" : "2022-10-07T08:41:24Z",
+  "modifiedAt" : "2022-11-02T14:04:09Z",
+  "testCases" : [ [ [ {
+    "id" : 678954321,
+    "uri" : "/item/678954321",
+    "name" : "Yaw Rate check"
+  } ], null, null, null ] ],
+  "description" : "https://jira.com/browse/TICKET-1234",
+  "descFormat" : "Plain",
+  "synectTRUID" : "deadbeafdeadbeafdeadbeafdeadbeaf",
+  "synectTRLink" : "[SAMPLE RUN: |synect://deadbeafdeadbeaf/~deadbeafdeadbeaf/~deadbeafdeadbeafdeadbeafdeadbeafdeadbeaf/~deadbeafdeadbeafdeadbeafdeadbeafdeadbeaf]",
+  "_TestCase_ID" : "[123456-678954321]"
+}
