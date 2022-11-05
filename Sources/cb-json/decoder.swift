@@ -112,13 +112,14 @@ func decodeJson(_ data:String) ->  TestRun {
 extension TestRun:CustomStringConvertible {
   var description: String {
     var result = ""
-    result += "   " + String.init(repeating: "⎯", count: 50) + "\n"
+    result += "   " + String.init(repeating: "⎯", count: 56) + "\n"
     result += "   │ Test Case Name:  \(self.name.rawValue) \n"
     result += "   │ Version       :  \(self.versions.first!.name.rawValue)\n"
     result += "   │ Submitted At  :  \(self.submittedAt.rawValue) \n"
     result += "   │ Test Run by   :  \(self.submitter.name.rawValue) \n"
     result += "   │ Test Result   :  \(self.result.name == "Failed" ? "⛔️": "✅") \n"
-    result += "   " + String.init(repeating: "⎯", count: 50)
+    result += "   │ JIRA          :  \(self.descriptions.rawValue) \n"
+    result += "   " + String.init(repeating: "⎯", count: 56)
     return result
   }
 }

@@ -5,7 +5,7 @@ let urls = CommandLine.arguments.dropFirst()
 
 
 for url in urls {
-  print(url)
+//  print(url)
   do {
     let data = try String(contentsOf: url)
     let result = decodeJson(data)
