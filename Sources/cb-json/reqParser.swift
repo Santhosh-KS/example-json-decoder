@@ -2,9 +2,11 @@ import Parsing
 
 var input = """
 ./+snailTrailsV2/snailTrailsHistoryTest.m:9:    methods (TestMethodSetup)
-./+snailTrailsV2/snailTrailsHistoryTest.m:21:    methods (Test, TestTags = {'req-swl-updateSnailTrail', 'req-swl-generateTrails', ...
-  ./+snailTrailsV2/snailTrailsHistoryTest.m:57:    methods (Test, TestTags = {'req-swl-checkToAddTrailPoint'})
-  ./+snailTrailsV2/snailTrailsHistoryTest.m:224:    methods (Test, TestTags = {'req-swl-updateSnailTrail'})
+./+snailTrailsV2/snailTrailsHistoryTest.m:21:    methods (Test, TestTags = {'req-swl-1', 'req-swl-2', ...
+./+snailTrailsV2/snailTrailsHistoryTest.m:57:    methods (Test, TestTags = {'req-swl-3'})
+./+snailTrailsV2/snailTrailsHistoryTest.m:224:    methods (Test, TestTags = {'req-swl-4'})
+./+snailTrailsV2/snailTrailsHistoryTest.m:230:    'req-swl-5'})
+./+snailTrailsV2/snailTrailsHistoryTest.m:230:    'req-swl-6', 'req-swl-7', ...
 """[...]
 
 struct FileInfo {
@@ -79,32 +81,63 @@ let manyReqParser = Parse {
   }
   OneOf {
     Skip { ", ..." }
-    Skip { "})" }
+    Skip { ")" }
   }
 }
 
-let lineParser = Parse {
-  PathParser()
-  MethodParser()
-  manyReqParser
+let p = OneOf {
+  Skip {
+    PrefixUpTo("{")
+    "{"
+  }
   Skip {
     PrefixUpTo(")")
-    ")"
+  }
+}
+
+
+let ending = OneOf {
+  Skip { "})" }
+//  Skip { "}" }
+  Skip { ")" }
+  Skip { ", ..."}
+ 
+}
+
+let lpWithReq = Parse {
+  RequirementParser()
+  OneOf {
+    Skip { ", ..."}
+    Skip { "})" }
+    Skip { ""}
+  }
+}
+
+let lpWithNoReq = Parse {
+  Skip {
+    PrefixUpTo("(")
+    PrefixUpTo(")")
+  }
+}
+
+let req = OneOf {
+  lpWithNoReq.map { [""] }
+//  lpWithReq.map { [$0] }
+  Many {
+    lpWithReq
+  }separator: {
+    ", "
   }
 }
 
 let lp = Parse {
   PathParser()
-  MethodParser()
-  manyReqParser
+  Many {
+    lpWithReq
+  }separator: {
+    ", "
+  }
 }
-
-input = """
-./+snailTrailsV2/snailTrailsHistoryTest.m:9:    methods (TestMethodSetup)
-./+snailTrailsV2/snailTrailsHistoryTest.m:21:    methods (Test, TestTags = {'req-swl-1', 'req-swl-2', ...
-./+snailTrailsV2/snailTrailsHistoryTest.m:57:    methods (Test, TestTags = {'req-swl-3'})
-./+snailTrailsV2/snailTrailsHistoryTest.m:224:    methods (Test, TestTags = {'req-swl-4', 'req-swl-5'})
-"""
 
 let mlp = Many {
   lp
