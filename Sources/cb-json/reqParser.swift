@@ -53,17 +53,9 @@ struct MethodParser:Parser {
 }
 
 let methodParser = MethodParser()
-  //  input = """
-  //    methods   {'req-swl-updateSnailTrail', 'req-swl-generateTrails', ...
-  //  """[...]
+
 try methodParser.parse(&input)
 input
-
-  // (Test, TestTags = {'req-swl-updateSnailTrail', 'req-swl-generateTrails'
-
-  //struct Requirement {
-  //  let id:String
-  //}
 
 struct RequirementParser:Parser  {
   func parse(_ input: inout Substring) throws -> String {
@@ -79,31 +71,6 @@ struct RequirementParser:Parser  {
   }
 }
 
-  //let reqParser = Parse {
-  //  Skip {
-  //    PrefixUpTo("{'")
-  //    "{'"
-  //  }
-  //  PrefixThrough("'")
-  //}
-
-  //let requirementsParser = Many {
-  //  reqParser
-  //} separator: {
-  //  ","
-  //}
-input =
-"""
-   (Test, TestTags = {'req-swl-updateSnailTrail', 'req-swl-generateTrails'
-"""
-try RequirementParser().parse(&input)
-input
-
-input =
-"""
-   (Test, TestTags = {'req-swl-updateSnailTrail', 'req-swl-generateTrails'...
-"""
-
 let manyReqParser = Parse {
   Many {
     RequirementParser()
@@ -115,15 +82,6 @@ let manyReqParser = Parse {
     Skip { "})" }
   }
 }
-  //  .parse(&input)
-
-  //input
-  //dump(manyReq)
-
-input =
-"""
- //./+snailTrailsV2/snailTrailsHistoryTest.m:57:    methods (Test, TestTags = {'req-swl-checkToAddTrailPoint', 'req-swl-abc' })
-"""
 
 let lineParser = Parse {
   PathParser()
@@ -135,52 +93,17 @@ let lineParser = Parse {
   }
 }
 
-  //dump(
-  //  try lineParser.parse(&input)
-  //)
-  //input
-
-  //let oneOfLineParser = OneOf {
-  //  manyReqParser
-  //  RequirementParser().map { [$0] }
-  //}
-
-input = """
-./+snailTrailsV2/snailTrailsHistoryTest.m:9:    methods (TestMethodSetup)
-./+snailTrailsV2/snailTrailsHistoryTest.m:21:    methods (Test, TestTags = {'req-swl-updateSnailTrail', 'req-swl-generateTrails', ...
-./+snailTrailsV2/snailTrailsHistoryTest.m:57:    methods (Test, TestTags = {'req-swl-checkToAddTrailPoint'})
-./+snailTrailsV2/snailTrailsHistoryTest.m:224:    methods (Test, TestTags = {'req-swl-updateSnailTrail'})
-"""
-
-  //let mlp = Many {
-  //  lineParser
-  //}separator: {
-  //  "\n"
-  //}
-  //dump(try mlp.parse(&input))
-  //input
-
-input = """
-./+snailTrailsV2/snailTrailsHistoryTest.m:21:    methods (Test, TestTags = {'req-swl-updateSnailTrail'})
-"""
-
-let lp = try Parse {
+let lp = Parse {
   PathParser()
   MethodParser()
   manyReqParser
 }
 
-  //  .parse(&input)
-  //dump(lp)
-  //input
-
-
 input = """
 ./+snailTrailsV2/snailTrailsHistoryTest.m:9:    methods (TestMethodSetup)
 ./+snailTrailsV2/snailTrailsHistoryTest.m:21:    methods (Test, TestTags = {'req-swl-1', 'req-swl-2', ...
 ./+snailTrailsV2/snailTrailsHistoryTest.m:57:    methods (Test, TestTags = {'req-swl-3'})
-./+snailTrailsV2/snailTrailsHistoryTest.m:224:    methods (Test, TestTags = {'req-swl-4'})
-
+./+snailTrailsV2/snailTrailsHistoryTest.m:224:    methods (Test, TestTags = {'req-swl-4', 'req-swl-5'})
 """
 
 let mlp = Many {
