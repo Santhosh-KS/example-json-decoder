@@ -1,18 +1,28 @@
 import Parsing
 
 var input = """
-./+snailTrailsV2/snailTrailsHistoryTest.m:9:    methods (TestMethodSetup)
-./+snailTrailsV2/snailTrailsHistoryTest.m:21:    methods (Test, TestTags = {'req-swl-1', 'req-swl-2', ...
-./+snailTrailsV2/snailTrailsHistoryTest.m:57:    methods (Test, TestTags = {'req-swl-3'})
-./+snailTrailsV2/snailTrailsHistoryTest.m:224:    methods (Test, TestTags = {'req-swl-4'})
-./+snailTrailsV2/snailTrailsHistoryTest.m:230:    'req-swl-5'})
-./+snailTrailsV2/snailTrailsHistoryTest.m:230:    'req-swl-6', 'req-swl-7', ...
+./xxx/a.m:9:    methods (TestMethodSetup)
+./xxx/b.m:21:    methods (Test, TestTags = {'req-swl-1', 'req-swl-2', ...
+./xxx/c.m:57:    methods (Test, TestTags = {'req-swl-3'})
+./yyy/d.m:224:    methods (Test, TestTags = {'req-swl-4'})
+./yyy/e.m:230:    'req-swl-5'})
+./yyy/d.m:231:    'req-swl-6', 'req-swl-7', ...
+./yyy/d.m:232:    'req-swl-8', ...
 """[...]
 
 struct FileInfo {
   let path: [String]
   let name: String
   let line: UInt64
+}
+
+struct Requirements {
+  var requirements:[String]
+}
+
+struct RequirementInfo {
+  var fileInfo: FileInfo
+  var reqmts: Requirements
 }
 
 struct PathParser: Parser {
@@ -128,7 +138,8 @@ let req = OneOf {
   }separator: {
     ", "
   }
-}
+}.map(Requirements.init(requirements:))
+
 
 let lp = Parse {
   PathParser()
@@ -137,6 +148,8 @@ let lp = Parse {
   }separator: {
     ", "
   }
+}.map { (finfo, strs) in
+  RequirementInfo.init(fileInfo: finfo, reqmts: Requirements.init(requirements: strs))
 }
 
 let mlp = Many {
@@ -144,5 +157,35 @@ let mlp = Many {
 }separator: {
   "\n"
 }
-dump(try mlp.parse(&input))
+let reqmts = try mlp.parse(&input)
 input
+
+extension FileInfo:Equatable {}
+extension Requirements:Equatable {}
+extension RequirementInfo:Equatable {}
+
+var consolidatedReqmts = [RequirementInfo]()
+
+reqmts.forEach { reqInfo in
+  if consolidatedReqmts.isEmpty {
+    consolidatedReqmts.append(reqInfo)
+  } else {
+    if !consolidatedReqmts.contains(where: { localReqinfo in
+      if localReqinfo.fileInfo == reqInfo.fileInfo {
+        return true
+      }
+      return false
+    }) {
+      consolidatedReqmts.append(reqInfo)
+    } else {
+      if let idx = consolidatedReqmts.firstIndex(of: reqInfo) {
+        reqInfo
+        consolidatedReqmts[idx].reqmts.requirements += reqInfo.reqmts.requirements
+      }
+    }
+  }
+}
+
+dump(reqmts)
+
+
